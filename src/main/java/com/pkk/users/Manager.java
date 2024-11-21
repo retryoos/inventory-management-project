@@ -14,16 +14,11 @@ public class Manager extends User {
     private int id;
 
     // Constructor
-    public Manager(String username, String password, int id) {
+    public Manager(String username, String password, int id, Connection conn) {
         super(username, password);
         this.id = id;
-        try {
-            // Initialize connection when the manager is logged in
-            this.connection = DatabaseConnection.connect();
-            System.out.println("Database connection established for Manager " + id);
-        } catch (SQLException e) {
-            System.out.println("Error establishing database connection: " + e.getMessage());
-        }
+        this.connection = conn; // Use the passed connection
+        System.out.println("Database connection established for Manager " + id);
     }
 
     // Accessor method for id
@@ -56,8 +51,8 @@ public class Manager extends User {
     }
 
     // Consider adding optional parameter for specific timeframe or from specific employee
-    public void generateSalesReport(int employeeId, String timeFrame, Sales sales) {
-        sales.generateReport(connection, employeeId, timeFrame);
+    public void generateSalesReport(int employeeId, Sales sales) {
+        sales.generateReport(connection, employeeId);
     }
 
     public void closeConnection() {

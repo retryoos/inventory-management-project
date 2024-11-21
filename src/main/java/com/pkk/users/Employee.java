@@ -11,27 +11,18 @@ import java.util.Scanner;
 
 public class Employee extends User {
     private int employeeId;
+    private Connection connection;
 
     // Constructor
-    public Employee(String username, String password, int employeeId) {
+    public Employee(String username, String password, int employeeId, Connection conn) {
         super(username, password);
         this.employeeId = employeeId;
-        try {
-            // Initialize connection when the manager is logged in
-            this.connection = DatabaseConnection.connect();
-            System.out.println("Database connection established for Manager " + id);
-        } catch (SQLException e) {
-            System.out.println("Error establishing database connection: " + e.getMessage());
-        }
+        this.connection = conn; // Store the connection passed to the constructor
+        System.out.println("Database connection established for Employee " + employeeId);
     }
 
     public int getEmployeeId() {
         return employeeId;
-    } 
-
-    @Override
-    public String getRole() {
-        return "Employee";
     }
 
     /* 
@@ -51,15 +42,15 @@ public class Employee extends User {
     */
 
     // Employee Specific
-    public void viewSales(Sales sales) {
-        sales.view(connection, employeeId);
+    public void generateReport(int employeeId, Sales sales) {
+        sales.generateReport(connection, employeeId);
     }
 
     public void closeConnection() {
         if (connection != null) {
             try {
                 connection.close();
-                System.out.println("Database connection closed for Manager " + id);
+                System.out.println("Database connection closed for Manager " + employeeId);
             } catch (SQLException e) {
                 System.out.println("Error closing database connection: " + e.getMessage());
             }

@@ -1,4 +1,4 @@
-package app.functionalities;
+package com.pkk.functionalities;
 
 import java.io.IOError;
 import java.io.IOException;
@@ -28,14 +28,10 @@ public class Sales {
                     System.out.println("Error generating sales report: " + e.getMessage());
                 }
             }
-<<<<<<< HEAD
         } else if (timeFrame) {
             // think for how to format this search on month specific else stick with just doing an employeeId sales search
         } else {
             // exception handling (maybe not needed)
         }
-=======
-        } 
->>>>>>> bbd5e6c (Update all files with latest changes)
     }
 }

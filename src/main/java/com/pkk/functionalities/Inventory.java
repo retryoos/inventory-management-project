@@ -15,6 +15,7 @@ public class Inventory {
             System.out.println("Invalid input product cannot be added to the inventory.");
             return;
         }
+        String query = "INSERT INTO inventory (product_name, quantity, price) VALUES (?, ?, ?)";
         
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, productName);
