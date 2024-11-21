@@ -36,11 +36,22 @@ public class Employee extends User {
 
     
     public void addSale(String productName, int qty, double price, Sales sales) {
+        try () {
+            // decrease stock or remove item
+        }
         sales.add(connection, productName, qty, price, employeeId);
     }
 
     public void cancelSale(int saleId, Sales sales) {
+        try () {
+            // increase stock or add iteam again
+        }
         sales.cancel(connection, saleId);
+    }
+
+    // Employee Specific
+    public void viewSales(Sales sales) {
+        sales.view(connection, employeeId);
     }
 
     public void closeConnection() {
