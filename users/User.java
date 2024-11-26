@@ -18,9 +18,4 @@ public abstract class User {
     public String getPassword() {
         return password;
     }
-
-    // Role-specific behavior to be implemented in subclasses
-    public abstract String getRole() {
-        ;
-    }
 }

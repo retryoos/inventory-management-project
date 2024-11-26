@@ -8,6 +8,42 @@
     <artifactId>user-auth-app</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <!-- Specify the source directory and output directory for compiled classes -->
+    <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <outputDirectory>target/classes</outputDirectory>
+
+        <plugins>
+            <!-- Compiler plugin to compile Java code -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>  <!-- Java source version -->
+                    <target>1.8</target>  <!-- Java target version -->
+                </configuration>
+            </plugin>
+
+            <!-- Exec plugin to run the Main class -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>Main</mainClass> <!-- Replace with your main class's full package path if it's in a package -->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <!-- PostgreSQL JDBC Driver -->
         <dependency>
