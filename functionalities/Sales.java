@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class Sales {
-    
+
     public void generateReport(Connection conn, int employeeId, String timeFrame) {
         if ("max".equals(timeFrame)) {
             String query = "SELECT * FROM sales WHERE employee_id = ?";
@@ -28,10 +28,14 @@ public class Sales {
                     System.out.println("Error generating sales report: " + e.getMessage());
                 }
             }
+<<<<<<< HEAD
         } else if (timeFrame) {
             // think for how to format this search on month specific else stick with just doing an employeeId sales search
         } else {
             // exception handling (maybe not needed)
         }
+=======
+        } 
+>>>>>>> bbd5e6c (Update all files with latest changes)
     }
 }
