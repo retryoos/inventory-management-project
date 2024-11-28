@@ -1,9 +1,9 @@
-package com.pkk.users;
+package com.ppk.users;
 
-import com.pkk.functionalities.Inventory;
-import com.pkk.functionalities.Sales;
-import com.pkk.services.DatabaseConnection;
-import com.pkk.services.AuthService;
+import com.ppk.functionalities.Inventory;
+import com.ppk.functionalities.Sales;
+import com.ppk.services.DatabaseConnection;
+import com.ppk.services.AuthService;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -17,8 +17,12 @@ public class Employee extends User {
     public Employee(String username, String password, int employeeId, Connection conn) {
         super(username, password);
         this.employeeId = employeeId;
-        this.connection = conn; // Store the connection passed to the constructor
-        System.out.println("Database connection established for Employee " + employeeId);
+        if (conn == null) {
+            System.out.println("Connection is null! Unable to establish connection.");
+        } else {
+            this.connection = conn;
+            System.out.println("Database connection established for Employee " + employeeId);
+        }
     }
 
     public int getEmployeeId() {
@@ -52,11 +56,17 @@ public class Employee extends User {
     public void closeConnection() {
         if (connection != null) {
             try {
-                connection.close();
-                System.out.println("Database connection closed for Employee " + employeeId);
+                if (!connection.isClosed()) {  // Ensure the connection is open before closing it
+                    connection.close();
+                    System.out.println("Database connection closed for Employee " + employeeId);
+                } else {
+                    System.out.println("Database connection is already closed for Employee " + employeeId);
+                }
             } catch (SQLException e) {
                 System.out.println("Error closing database connection: " + e.getMessage());
             }
+        } else {
+            System.out.println("No connection to close for Employee " + employeeId);
         }
     }
 }

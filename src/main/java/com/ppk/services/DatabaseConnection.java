@@ -1,4 +1,4 @@
-package com.pkk.services;
+package com.ppk.services;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

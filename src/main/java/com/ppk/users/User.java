@@ -1,4 +1,4 @@
-package com.pkk.users;
+package com.ppk.users;
 
 public abstract class User {
     private String username;

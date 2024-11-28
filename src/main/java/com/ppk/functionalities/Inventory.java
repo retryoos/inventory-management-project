@@ -1,4 +1,4 @@
-package com.pkk.functionalities;
+package com.ppk.functionalities;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -69,17 +69,21 @@ public class Inventory {
     public void search(Connection conn, String productName) {
         String query = "SELECT * FROM inventory WHERE product_name LIKE ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, productName);
-            stmt.executeQuery();
-            System.out.println("Product Name | Quantity | Price");
-            System.out.println("-------------------------------");
-            while (stmt.getResultSet().next()) {
-                System.out.println(stmt.getResultSet().getString("product_name") + " | " + stmt.getResultSet().getInt("quantity") + " | " + stmt.getResultSet().getDouble("price"));
+            // Add % wildcards around the productName to match substrings
+            stmt.setString(1, "%" + productName + "%"); 
+            try (ResultSet rs = stmt.executeQuery()) {
+                System.out.println("Product Name | Quantity | Price");
+                System.out.println("-------------------------------");
+                while (rs.next()) {
+                    System.out.println(rs.getString("product_name") + " | " + 
+                                       rs.getInt("quantity") + " | " + 
+                                       rs.getDouble("price"));
+                }
             }
         } catch (SQLException e) {
             System.out.println("Error searching inventory: " + e.getMessage());
         }
-    }
+    }    
 
     public void update(Connection conn, int productId, String productName, int qty, double price) {
         String query = "UPDATE inventory SET price = ?, quantity = ?, product_name = ? WHERE id = ?";

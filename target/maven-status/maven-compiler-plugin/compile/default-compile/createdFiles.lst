@@ -1,3 +1,10 @@
-com/pkk/services/DatabaseConnection.class
-com/pkk/services/AuthService$UserDetails.class
-com/pkk/services/AuthService.class
+com/ppk/services/AuthService.class
+com/ppk/functionalities/Inventory.class
+com/ppk/functionalities/Sales.class
+com/ppk/users/User.class
+com/ppk/users/Manager.class
+com/ppk/Main.class
+com/ppk/users/Employee.class
+com/ppk/functionalities/EmployeeManage.class
+com/ppk/services/DatabaseConnection.class
+com/ppk/services/AuthService$UserDetails.class

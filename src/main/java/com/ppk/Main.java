@@ -1,13 +1,14 @@
-package com.pkk;
+package com.ppk;
 
-import com.pkk.users.Manager;
-import com.pkk.users.Employee;
+import com.ppk.users.Manager;
+import com.ppk.users.Employee;
 
-import com.pkk.functionalities.Inventory;
-import com.pkk.functionalities.Sales;
+import com.ppk.functionalities.Inventory;
+import com.ppk.functionalities.Sales;
+import com.ppk.functionalities.EmployeeManage;
 
-import com.pkk.services.AuthService;
-import com.pkk.services.DatabaseConnection;
+import com.ppk.services.AuthService;
+import com.ppk.services.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -93,6 +94,8 @@ public class Main {
             } else {
                 System.out.println("Unable to establish a database connection.");
             }
+        } else {
+            login();
         }
         scanner.close();
     }
@@ -108,10 +111,12 @@ public class Main {
         System.out.println("4. Export Inventory Report");
         System.out.println("5. Search for Specific Item");
         System.out.println("6. Generate All Sales Report");
-        System.out.println("7. Generate Specific Employee Report");
+        System.out.println("7. Generate Employee Specific Report");
         System.out.println("8. Add Sale to Employee");
         System.out.println("9. Cancel Sale");
-        System.out.println("10. Logout");
+        System.out.println("10. Remove User");
+        System.out.println("11. View All Employees Report");
+        System.out.println("12. Logout");
 
         // Initiate variables
         int productId;
@@ -120,6 +125,7 @@ public class Main {
         int qty;
         int employee_id_sale;
         int saleId;
+        int employee_id_remove;
 
         int choice = scanner.nextInt();
         scanner.nextLine();
@@ -280,7 +286,7 @@ public class Main {
                     }
                 }
                 
-                // Collect and validate prductId input
+                // Collect and validate productId input
                 while (true) {
                     System.out.print("Enter product id: ");
                     if (scanner.hasNextInt()) {
@@ -334,6 +340,27 @@ public class Main {
                 manager.cancelSale(saleId, new Sales());
                 showManagerMenu(manager);
             case 10:
+                System.out.print("Enter employee ID to remove: ");
+
+                while (true) {
+                    try {
+                        employee_id_remove = Integer.parseInt(scanner.nextLine());
+                        if (employee_id_remove > 0) {
+                            break;
+                        } else {
+                            System.out.print("Employee ID must be a positive integer. Try again: ");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.print("Invalid input. Please enter a valid integer for Employee ID: ");
+                    }
+                }
+
+                manager.removeEmployee(employee_id_remove, new EmployeeManage());
+                showManagerMenu(manager);
+            case 11:
+                manager.generateAllEmployeesReport(new EmployeeManage());
+                showManagerMenu(manager);
+            case 12:
                 System.out.println("Logging out...");
                 manager.closeConnection();  // Close the database connection
                 break;
@@ -348,7 +375,7 @@ public class Main {
     private static void showEmployeeMenu(Employee employee) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("\nEmployee Menu:");
-        System.out.println("1. View Products");
+        System.out.println("1. Export Inventory Report");
         System.out.println("2. Search Specific Item");
         System.out.println("3. Add Sale");
         System.out.println("4. Generate Sales Report");

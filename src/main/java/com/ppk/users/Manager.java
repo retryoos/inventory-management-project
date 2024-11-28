@@ -1,11 +1,14 @@
-package com.pkk.users;
+package com.ppk.users;
 
-import com.pkk.functionalities.Inventory;
-import com.pkk.functionalities.Sales;
-import com.pkk.services.DatabaseConnection;
-import com.pkk.services.AuthService;
+import com.ppk.functionalities.Inventory;
+import com.ppk.functionalities.Sales;
+import com.ppk.functionalities.EmployeeManage;
+
+import com.ppk.services.DatabaseConnection;
+import com.ppk.services.AuthService;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -17,8 +20,12 @@ public class Manager extends User {
     public Manager(String username, String password, int id, Connection conn) {
         super(username, password);
         this.id = id;
-        this.connection = conn; // Use the passed connection
-        System.out.println("Database connection established for Manager " + id);
+        if (conn == null) {
+            System.out.println("Connection is null! Unable to establish connection.");
+        } else {
+            this.connection = conn;
+            System.out.println("Database connection established for Manager " + id);
+        }
     }
 
     // Accessor method for id
@@ -69,14 +76,29 @@ public class Manager extends User {
         sales.cancel(connection, saleId);
     }
 
+    public void removeEmployee(int employeeId, EmployeeManage employeeManage) {
+        employeeManage.remove(connection, employeeId);
+    }
+
+    public void generateAllEmployeesReport(EmployeeManage employeeManage) {
+        employeeManage.viewAll(connection);
+    }
+
     public void closeConnection() {
         if (connection != null) {
             try {
-                connection.close();
-                System.out.println("Database connection closed for Manager " + id);
+                if (!connection.isClosed()) {  // Ensure the connection is open before closing it
+                    connection.close();
+                    System.out.println("Database connection closed for Manager " + id);
+                } else {
+                    System.out.println("Database connection is already closed for Manager " + id);
+                }
             } catch (SQLException e) {
                 System.out.println("Error closing database connection: " + e.getMessage());
             }
+        } else {
+            System.out.println("No connection to close for Manager " + id);
         }
     }
+    
 }
