@@ -42,26 +42,6 @@ public class AuthService {
             return false;
         }
 
-        // Null (unauthenticated) users can only register themselves as employees
-        if (currentRole == null) {
-            if (!"employee".equals(newRole)) {
-                System.out.println("Unauthenticated users can only register as employees.");
-                return false;
-            }
-        } else if ("employee".equals(currentRole)) {
-            // Employees cannot register new users
-            System.out.println("Employees cannot register new users.");
-            return false;
-        } else if ("manager".equals(currentRole)) {
-            // Only managers can register other managers
-            if ("manager".equals(newRole)) {
-                System.out.println("Manager is creating a new manager.");
-            }
-        } else {
-            System.out.println("Invalid current role.");
-            return false;
-        }
-
         // Check if the username is already taken
         if (isUsernameTaken(newUsername)) {
             System.out.println("Username is already taken.");

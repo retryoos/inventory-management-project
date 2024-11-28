@@ -1,7 +1,10 @@
 package com.pkk.functionalities;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /*
@@ -10,8 +13,8 @@ import java.sql.SQLException;
 
 public class Inventory {
 
-    public void add(Connection conn, String productName, int quantity, double price) {
-        if (productName.length() == 0 || quantity <= 0 || price <= 0) {
+    public void add(Connection conn, String productName, int qty, double price) {
+        if (productName.length() == 0 || qty <= 0 || price <= 0) {
             System.out.println("Invalid input product cannot be added to the inventory.");
             return;
         }
@@ -19,7 +22,7 @@ public class Inventory {
         
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, productName);
-            stmt.setInt(2, quantity);
+            stmt.setInt(2, qty);
             stmt.setDouble(3, price);
             stmt.executeUpdate();
             System.out.println("Product [" + productName + "] added to the inventory.");
@@ -41,20 +44,30 @@ public class Inventory {
 
     public void view(Connection conn) {
         String query = "SELECT * FROM inventory";
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.executeQuery();
-            System.out.println("Product Name | Quantity | Price");
-            System.out.println("-------------------------------");
-            while (stmt.getResultSet().next()) {
-                System.out.println(stmt.getResultSet().getString("product_name") + " | " + stmt.getResultSet().getInt("quantity") + " | " + stmt.getResultSet().getDouble("price"));
+        try (PreparedStatement stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery()) {
+            try (FileWriter writer = new FileWriter("inventory_report.csv")) {
+                // Write the CSV header
+                writer.append("ID, Product Name, Quantity, Price, Created At\n");
+                // Loop through the ResultSet and write each row to the CSV file
+                while (rs.next()) {
+                    writer.append(rs.getInt("id") + ",");
+                    writer.append(rs.getString("product_name") + ",");
+                    writer.append(rs.getInt("quantity") + ",");
+                    writer.append(rs.getDouble("price") + ",");
+                    writer.append(rs.getTimestamp("created_at") + "\n");  // Assuming timestamp is stored
+                }
+                System.out.println("Inventory report generated: inventory_report.csv");
+            } catch (IOException e) {
+                System.out.println("Error writing inventory report: " + e.getMessage());
             }
         } catch (SQLException e) {
-            System.out.println("Error viewing inventory: " + e.getMessage());
+            System.out.println("Error executing query: " + e.getMessage());
         }
     }
 
     public void search(Connection conn, String productName) {
-        String query = "SELECT * FROM inventory WHERE product_name = ?";
+        String query = "SELECT * FROM inventory WHERE product_name LIKE ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, productName);
             stmt.executeQuery();

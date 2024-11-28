@@ -40,7 +40,7 @@ public class Manager extends User {
         inventory.update(connection, productId, productName, qty, price);
     }
 
-    // Consider optional parameter of specific category (once added)
+    // View all stock
     public void viewAllProducts(Inventory inventory) {
         inventory.view(connection);
     }
@@ -50,9 +50,23 @@ public class Manager extends User {
         inventory.search(connection, productName);
     }
 
-    // Consider adding optional parameter for specific timeframe or from specific employee
-    public void generateSalesReport(int employeeId, Sales sales) {
+    // Generates sales report csv for a specific employee
+    public void generateEmployeesSalesReport(int employeeId, Sales sales) {
         sales.generateReport(connection, employeeId);
+    }
+
+    // Generates a sales report csv for all sales from all employees
+    public void generateAllSalesReport(Sales sales) {
+        sales.generateAllSalesReport(connection);
+    }
+
+    // Add sale
+    public void addSale(String productName, int qty, double price, int employeeId, int productId, Sales sales) {
+        sales.add(connection, productName, qty, price, employeeId, productId);
+    }
+
+    public void cancelSale(int saleId, Sales sales) {
+        sales.cancel(connection, saleId);
     }
 
     public void closeConnection() {

@@ -2,6 +2,10 @@ package com.pkk;
 
 import com.pkk.users.Manager;
 import com.pkk.users.Employee;
+
+import com.pkk.functionalities.Inventory;
+import com.pkk.functionalities.Sales;
+
 import com.pkk.services.AuthService;
 import com.pkk.services.DatabaseConnection;
 
@@ -9,11 +13,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Scanner; 
 
-// Compile and Run
-// javac app/Main.java app/functionalities/*.java app/users/*.java
-// java app.Main
-
-// Currently just test file
+// mvn compile -e
+// mvn exec:java -e
 
 public class Main {
     public static void main(String[] args) {
@@ -40,8 +41,7 @@ public class Main {
             // Call AuthService to register the user
             boolean registrationSuccess = AuthService.registerUser(null, username, password, role);
             if (registrationSuccess) {
-                System.out.println("User registered successfully!");
-                
+                System.out.println("Welcome, enter your credentials to login.");
                 // After registration, call the login method to authenticate the new user
                 login();
             } else {
@@ -105,21 +105,241 @@ public class Main {
         System.out.println("1. Add Product");
         System.out.println("2. Remove Product");
         System.out.println("3. Update Product");
-        System.out.println("4. View All Products");
-        System.out.println("5. Generate Sales Report");
-        System.out.println("6. Logout");
+        System.out.println("4. Export Inventory Report");
+        System.out.println("5. Search for Specific Item");
+        System.out.println("6. Generate All Sales Report");
+        System.out.println("7. Generate Specific Employee Report");
+        System.out.println("8. Add Sale to Employee");
+        System.out.println("9. Cancel Sale");
+        System.out.println("10. Logout");
+
+        // Initiate variables
+        int productId;
+        String productName;
+        double price;
+        int qty;
+        int employee_id_sale;
+        int saleId;
 
         int choice = scanner.nextInt();
+        scanner.nextLine();
+
         switch (choice) {
             case 1:
-                // Implement add product logic
-                break;
+                System.out.print("Enter product name: ");
+                productName = scanner.nextLine();
+                
+                // Collect quantity
+                System.out.print("Enter quantity: ");
+                while (true) { // Validate input
+                    try {
+                        qty = Integer.parseInt(scanner.nextLine());
+                        if (qty > 0) break;
+                        else System.out.print("Quantity must be a positive integer. Try again: ");
+                    } catch (NumberFormatException e) {
+                        System.out.print("Invalid input. Please enter a positive integer for quantity: ");
+                    }
+                }
+                
+                // Collect price
+                System.out.print("Enter price: ");
+                while (true) { // Validate input
+                    try {
+                        price = Double.parseDouble(scanner.nextLine());
+                        if (price > 0) break;
+                        else System.out.print("Price must be a positive number. Try again: ");
+                    } catch (NumberFormatException e) {
+                        System.out.print("Invalid input. Please enter a positive number for price: ");
+                    }
+                }
+                manager.addProduct(productName, qty, price, new Inventory());
+                showManagerMenu(manager);
+            case 2:
+                System.out.print("Enter product ID to remove: ");
+            
+                // Validate the input
+                while (true) {
+                    try {
+                        productId = Integer.parseInt(scanner.nextLine()); // Use nextLine() for better error handling
+                        if (productId > 0) { // Check for positive IDs
+                            break;
+                        } else {
+                            System.out.print("Product ID must be a positive integer. Try again: ");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.print("Invalid input. Please enter a valid integer for Product ID: ");
+                    }
+                }
+            
+                // Call the removeProduct method
+                manager.removeProduct(productId, new Inventory());
+                showManagerMenu(manager);
+            case 3:
+                System.out.print("Enter Product ID to update: ");
+        
+                // Validate the input for Product ID
+                while (true) {
+                    try {
+                        productId = Integer.parseInt(scanner.nextLine());
+                        if (productId > 0) {
+                            break;
+                        } else {
+                            System.out.print("Product ID must be a positive integer. Try again: ");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.print("Invalid input. Please enter a valid integer for product ID: ");
+                    }
+               }
+        
+                // Get new product name from user
+                System.out.print("Enter new product name: ");
+                productName = scanner.nextLine();
+        
+                // Get new product quantity from user
+                while (true) {
+                    System.out.print("Enter new quantity: ");
+                    try {
+                        qty = Integer.parseInt(scanner.nextLine());
+                        if (qty >= 0) {  // Ensure quantity is non-negative
+                            break;
+                        } else {
+                            System.out.print("Quantity must be non-negative. Try again: ");
+                        }
+                    } catch (NumberFormatException e) {
+                     System.out.print("Invalid input. Please enter a valid integer for quantity: ");
+                    }
+                }
+        
+                // Get new price from user
+                while (true) {
+                    System.out.print("Enter new price: ");
+                    try {
+                        price = Double.parseDouble(scanner.nextLine());
+                        if (price > 0) {  // Ensure price is positive
+                            break;
+                        } else {
+                            System.out.print("Price must be positive. Try again: ");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.print("Invalid input. Please enter a valid price: ");
+                    }
+                }
+        
+                // Call the update method in Inventory or Manager
+                manager.updateProduct(productId, productName, qty, price, new Inventory());
+                showManagerMenu(manager);
+            case 4:
+                manager.viewAllProducts(new Inventory());
+                showManagerMenu(manager);
+            case 5:
+                System.out.print("Enter product name to search: ");
+                productName = scanner.nextLine();
+                manager.searchProduct(productName, new Inventory());
+                showManagerMenu(manager);
             case 6:
+                manager.generateAllSalesReport(new Sales());
+                showManagerMenu(manager);
+            case 7:
+                System.out.println("Enter employee ID to generate sales report: ");
+                int employee_id_report = scanner.nextInt();
+                manager.generateEmployeesSalesReport(employee_id_report, new Sales());
+                showManagerMenu(manager);
+            case 8:
+                System.out.print("Enter product name: ");
+                productName = scanner.nextLine();
+                
+                // Collect and validate quantity input
+                while (true) {
+                    System.out.print("Enter quantity: ");
+                    if (scanner.hasNextInt()) {
+                        qty = scanner.nextInt();
+                        if (qty > 0) {
+                            break; // Valid quantity input, exit loop
+                        } else {
+                            System.out.println("Quantity must be a positive integer.");
+                        }
+                    } else {
+                        System.out.println("Invalid input! Please enter a valid integer for quantity.");
+                        scanner.next(); // Consume the invalid input
+                    }
+                }
+            
+                // Collect and validate price input
+                while (true) {
+                    System.out.print("Enter price: ");
+                    if (scanner.hasNextDouble()) {
+                        price = scanner.nextDouble();
+                        if (price > 0) {
+                            break; // Valid price input, exit loop
+                        } else {
+                            System.out.println("Price must be greater than 0.");
+                        }
+                    } else {
+                        System.out.println("Invalid input! Please enter a valid number for price.");
+                        scanner.next(); // Consume the invalid input
+                    }
+                }
+                
+                // Collect and validate prductId input
+                while (true) {
+                    System.out.print("Enter product id: ");
+                    if (scanner.hasNextInt()) {
+                        productId = scanner.nextInt();
+                        if (productId > 0) {
+                            break; // Valid quantity input, exit loop
+                        } else {
+                            System.out.println("Product id must be a positive integer.");
+                        }
+                    } else {
+                        System.out.println("Invalid input! Please enter a valid integer for product id.");
+                        scanner.next(); // Consume the invalid input
+                    }
+                }
+                
+                // Collect and validate employee id input
+                while (true) {
+                    System.out.print("Enter employee id: ");
+                    if (scanner.hasNextInt()) {
+                        employee_id_sale = scanner.nextInt();
+                        if (employee_id_sale > 0) {
+                            break; // Valid quantity input, exit loop
+                        } else {
+                            System.out.println("Employee id must be a positive integer.");
+                        }
+                    } else {
+                        System.out.println("Invalid input! Please enter a valid integer for employee id.");
+                        scanner.next(); // Consume the invalid input
+                    }
+                }
+
+                // Call the addSale method
+                manager.addSale(productName, qty, price, employee_id_sale, productId, new Sales());
+                // Show the manager menu again after the action is done
+                showManagerMenu(manager);
+            case 9:
+                System.out.print("Enter sale ID to cancel: ");
+
+                while (true) {
+                    try {
+                        saleId = Integer.parseInt(scanner.nextLine());
+                        if (saleId > 0) {
+                            break;
+                        } else {
+                            System.out.print("Sale ID must be a positive integer. Try again: ");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.print("Invalid input. Please enter a valid integer for Sale ID: ");
+                    }
+                }
+                manager.cancelSale(saleId, new Sales());
+                showManagerMenu(manager);
+            case 10:
                 System.out.println("Logging out...");
                 manager.closeConnection();  // Close the database connection
                 break;
             default:
                 System.out.println("Invalid choice");
+                showManagerMenu(manager);
         }
         scanner.close();
     }
@@ -129,19 +349,95 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         System.out.println("\nEmployee Menu:");
         System.out.println("1. View Products");
-        System.out.println("2. Logout");
+        System.out.println("2. Search Specific Item");
+        System.out.println("3. Add Sale");
+        System.out.println("4. Generate Sales Report");
+        System.out.println("5. Logout");
+
+        String productName;
+        double price;
+        int qty;
+        int productId;
 
         int choice = scanner.nextInt();
+        scanner.nextLine();
+
         switch (choice) {
             case 1:
-                // Implement view products logic
-                break;
+                employee.viewInventory(new Inventory());
+                showEmployeeMenu(employee);
             case 2:
+                System.out.print("Enter product name to search: ");
+                productName = scanner.nextLine();
+                employee.searchItem(productName, new Inventory());
+                showEmployeeMenu(employee);
+            case 3:
+                System.out.print("Enter product name: ");
+                productName = scanner.nextLine();
+                
+                // Collect and validate quantity input
+                while (true) {
+                    System.out.print("Enter quantity: ");
+                    if (scanner.hasNextInt()) {
+                        qty = scanner.nextInt();
+                        if (qty > 0) {
+                            break; // Valid quantity input, exit loop
+                        } else {
+                            System.out.println("Quantity must be a positive integer.");
+                        }
+                    } else {
+                        System.out.println("Invalid input! Please enter a valid integer for quantity.");
+                        scanner.next(); // Consume the invalid input
+                    }
+                }
+            
+                // Collect and validate price input
+                while (true) {
+                    System.out.print("Enter price per unit: ");
+                    if (scanner.hasNextDouble()) {
+                        price = scanner.nextDouble();
+                        if (price > 0) {
+                            break; // Valid price input, exit loop
+                        } else {
+                            System.out.println("Price must be greater than 0.");
+                        }
+                    } else {
+                        System.out.println("Invalid input! Please enter a valid number for price.");
+                        scanner.next(); // Consume the invalid input
+                    }
+                }
+
+                // Collect and validate productId input
+                while (true) {
+                    System.out.print("Enter quantity: ");
+                    if (scanner.hasNextInt()) {
+                        productId = scanner.nextInt();
+                        if (productId > 0) {
+                            break; // Valid quantity input, exit loop
+                        } else {
+                            System.out.println("Product ID must be a positive integer.");
+                        }
+                    } else {
+                        System.out.println("Invalid input! Please enter a valid integer for Product ID.");
+                        scanner.next(); // Consume the invalid input
+                    }
+                }
+            
+                // Call the addSale method
+                employee.addSale(productName, qty, price, employee.getEmployeeId(), productId, new Sales());
+                
+                // Show the employee menu again after the action is done
+                showEmployeeMenu(employee);
+            case 4:
+                employee.generateReport(employee.getEmployeeId(), new Sales());
+                showEmployeeMenu(employee);
+            case 5:
                 System.out.println("Logging out...");
                 employee.closeConnection();  // Close the database connection
                 break;
             default:
                 System.out.println("Invalid choice");
+                showEmployeeMenu(employee);
         }
         scanner.close();
     }

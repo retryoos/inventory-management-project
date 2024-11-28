@@ -25,32 +25,35 @@ public class Employee extends User {
         return employeeId;
     }
 
-    /* 
-    public void addSale(String productName, int qty, double price, Sales sales) {
-        //try () {
-            // decrease stock or remove item
-        }
-        sales.add(connection, productName, qty, price, employeeId);
+    // Inventory Methods
+    
+    // View all inventory
+    public void viewInventory(Inventory inventory) {
+        inventory.view(connection);
     }
 
-    public void cancelSale(int saleId, Sales sales) {
-        try () {
-            // increase stock or add iteam again
-        }
-        sales.cancel(connection, saleId);
+    // Search for item in inventory
+    public void searchItem(String productName, Inventory inventory) {
+        inventory.search(connection, productName);
     }
-    */
 
-    // Employee Specific
+    // Sales Methods
+
+    // Generate Employee Specific Report
     public void generateReport(int employeeId, Sales sales) {
         sales.generateReport(connection, employeeId);
+    }
+
+    // Make sale add to table
+    public void addSale(String productName, int qty, double price, int employeeId, int productId, Sales sales) {
+        sales.add(connection, productName, qty, price, employeeId, productId);
     }
 
     public void closeConnection() {
         if (connection != null) {
             try {
                 connection.close();
-                System.out.println("Database connection closed for Manager " + employeeId);
+                System.out.println("Database connection closed for Employee " + employeeId);
             } catch (SQLException e) {
                 System.out.println("Error closing database connection: " + e.getMessage());
             }
