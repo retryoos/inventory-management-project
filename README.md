@@ -26,7 +26,17 @@ The Sales Inventory Tracker is a comprehensive and professional-grade applicatio
       - Performance analytics for employees and products.
 
 **🛠️ Tech Stack:**
-**- Backend:** Java OOP principles (encapsulation, inheritance, polymorphism, and abstraction) for modular design, Spring Security for role-based access control and encrypted credentials, and BCryptPasswordEncoder for secure encryption of passwords.
-**- Database:** PostgreSQL for reliable and scalable data storage.
-**- Build Tool:** Maven to manage dependencies, automate builds, and simplify deployment.
-**- Hosting:** Deployed on Heroku with integrated PostgreSQL.
+
+- **Backend:** 
+  - Java OOP principles (encapsulation, inheritance, polymorphism, and abstraction) for modular design.
+  - Spring Security for role-based access control and encrypted credentials.
+  - BCryptPasswordEncoder for secure encryption of passwords.
+
+- **Database:** 
+  - PostgreSQL for reliable and scalable data storage.
+
+- **Build Tool:** 
+  - Maven to manage dependencies, automate builds, and simplify deployment.
+
+- **Hosting:** 
+  - Deployed on Heroku with integrated PostgreSQL.
