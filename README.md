@@ -2,7 +2,7 @@
 
 The Sales Inventory Tracker is a comprehensive and professional-grade application developed as part of a project to enhance our programming and software development skills. Its design focuses on meeting real-world business needs while honing coding techniques in a structured, professional environment.
 
-#🚀 Key Features
+**🚀 Key Features**
 
 **Role-Based Access Control:**
 - Secure login system with different access levels:
