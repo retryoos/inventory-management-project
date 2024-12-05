@@ -1,8 +1,9 @@
-/Users/dkall/Desktop/University/Deree/Junior Year/SWE/Final Project/app/src/main/java/com/pkk/users/User.java
-/Users/dkall/Desktop/University/Deree/Junior Year/SWE/Final Project/app/src/main/java/com/pkk/services/AuthService.java
-/Users/dkall/Desktop/University/Deree/Junior Year/SWE/Final Project/app/src/main/java/com/pkk/users/Manager.java
-/Users/dkall/Desktop/University/Deree/Junior Year/SWE/Final Project/app/src/main/java/com/pkk/users/Employee.java
-/Users/dkall/Desktop/University/Deree/Junior Year/SWE/Final Project/app/src/main/java/com/pkk/services/DatabaseConnection.java
-/Users/dkall/Desktop/University/Deree/Junior Year/SWE/Final Project/app/src/main/java/com/pkk/functionalities/Sales.java
-/Users/dkall/Desktop/University/Deree/Junior Year/SWE/Final Project/app/src/main/java/com/pkk/functionalities/Inventory.java
-/Users/dkall/Desktop/University/Deree/Junior Year/SWE/Final Project/app/src/main/java/com/pkk/Main.java
+/Users/dkall/Desktop/University/Deree/Junior Year/SWE/Final Project/app/src/main/java/com/ppk/functionalities/Inventory.java
+/Users/dkall/Desktop/University/Deree/Junior Year/SWE/Final Project/app/src/main/java/com/ppk/users/Employee.java
+/Users/dkall/Desktop/University/Deree/Junior Year/SWE/Final Project/app/src/main/java/com/ppk/services/DatabaseConnection.java
+/Users/dkall/Desktop/University/Deree/Junior Year/SWE/Final Project/app/src/main/java/com/ppk/services/AuthService.java
+/Users/dkall/Desktop/University/Deree/Junior Year/SWE/Final Project/app/src/main/java/com/ppk/users/Manager.java
+/Users/dkall/Desktop/University/Deree/Junior Year/SWE/Final Project/app/src/main/java/com/ppk/Main.java
+/Users/dkall/Desktop/University/Deree/Junior Year/SWE/Final Project/app/src/main/java/com/ppk/functionalities/EmployeeManage.java
+/Users/dkall/Desktop/University/Deree/Junior Year/SWE/Final Project/app/src/main/java/com/ppk/users/User.java
+/Users/dkall/Desktop/University/Deree/Junior Year/SWE/Final Project/app/src/main/java/com/ppk/functionalities/Sales.java

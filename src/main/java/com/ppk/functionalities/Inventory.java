@@ -42,7 +42,25 @@ public class Inventory {
         }
     }
 
-    public void view(Connection conn) {
+    public void viewAll(Connection conn) {
+        String query = "SELECT * FROM inventory";
+        try (PreparedStatement stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery()) {
+            System.out.println("ID | Product Name | Quantity | Price | Created At");
+            System.out.println("-----------------------------------------------");
+            while (rs.next()) {
+                System.out.println(rs.getInt("id") + " | " + 
+                                   rs.getString("product_name") + " | " + 
+                                   rs.getInt("quantity") + " | " + 
+                                   rs.getDouble("price") + " | " + 
+                                   rs.getTimestamp("created_at"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error executing query: " + e.getMessage());
+        }
+    }
+
+    public void exportAll(Connection conn) {
         String query = "SELECT * FROM inventory";
         try (PreparedStatement stmt = conn.prepareStatement(query);
             ResultSet rs = stmt.executeQuery()) {
@@ -86,13 +104,29 @@ public class Inventory {
     }    
 
     public void update(Connection conn, int productId, String productName, int qty, double price) {
-        String query = "UPDATE inventory SET price = ?, quantity = ?, product_name = ? WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setDouble(1, price);
-            stmt.setInt(2, qty);
-            stmt.setString(3, productName);
-            stmt.setInt(4, productId);
-            stmt.executeUpdate();
+        String checkQuery = "SELECT COUNT(*) FROM inventory WHERE id = ?";
+        String updateQuery = "UPDATE inventory SET price = ?, quantity = ?, product_name = ? WHERE id = ?";
+    
+        try (PreparedStatement checkStmt = conn.prepareStatement(checkQuery)) {
+            // Check if the product exists
+            checkStmt.setInt(1, productId);
+            ResultSet rs = checkStmt.executeQuery();
+            if (rs.next() && rs.getInt(1) == 0) { // If COUNT(*) == 0, the product doesn't exist
+                System.out.println("Error: Product with id [" + productId + "] does not exist in the inventory.");
+                return; // Exit the method
+            }
+        } catch (SQLException e) {
+            System.out.println("Error validating product existence: " + e.getMessage());
+            return; // Exit if validation fails
+        }
+    
+        try (PreparedStatement updateStmt = conn.prepareStatement(updateQuery)) {
+            // Update the product
+            updateStmt.setDouble(1, price);
+            updateStmt.setInt(2, qty);
+            updateStmt.setString(3, productName);
+            updateStmt.setInt(4, productId);
+            updateStmt.executeUpdate();
             System.out.println("Product with id [" + productId + "] updated in the inventory.");
         } catch (SQLException e) {
             System.out.println("Error updating product information: " + e.getMessage());

@@ -9,7 +9,49 @@ import java.sql.SQLException;
 
 public class Sales {
 
-    // Consider timeframe string param to parse
+    public void viewAllSalesManager(Connection conn) {
+        String query = "SELECT * FROM sales";
+        try (PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            System.out.println("ID | Product Name | Quantity | Price | Total Amount | Employee ID | Date");
+            System.out.println("-------------------------------------------------------------");
+            while (rs.next()) {
+                System.out.println(rs.getInt("id") + " | " +
+                                   rs.getString("product_name") + " | " +
+                                   rs.getInt("quantity_sold") + " | " +
+                                   rs.getDouble("price") + " | " +
+                                   rs.getDouble("total_amount") + " | " +
+                                   rs.getInt("employee_id") + " | " +
+                                   rs.getDate("sale_date"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error executing query: " + e.getMessage());
+        }
+    }
+
+    public void viewAllSalesEmployee(Connection conn, int employeeId) {
+        String query = "SELECT * FROM sales WHERE employee_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, employeeId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                System.out.println("ID | Product Name | Quantity | Price | Total Amount | Date");
+                System.out.println("-------------------------------------------------------------");
+                while (rs.next()) {
+                    System.out.println(rs.getInt("id") + " | " +
+                                       rs.getString("product_name") + " | " +
+                                       rs.getInt("quantity_sold") + " | " +
+                                       rs.getDouble("price") + " | " +
+                                       rs.getDouble("total_amount") + " | " +
+                                       rs.getDate("sale_date"));
+                }
+            } catch (SQLException e) {
+                System.out.println("Error executing query: " + e.getMessage());
+            }
+        } catch (SQLException e) {
+            System.out.println("Error preparing statement: " + e.getMessage());
+        }
+    }
+
     public void generateReport(Connection conn, int employeeId) {
         String query = "SELECT * FROM sales WHERE employee_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -39,7 +81,6 @@ public class Sales {
         }
     }
 
-    // Generate sales report for all employees that the manager can access
     public void generateAllSalesReport(Connection conn) {
         String query = "SELECT * FROM sales";
         try (PreparedStatement stmt = conn.prepareStatement(query);
@@ -64,7 +105,6 @@ public class Sales {
         }
     }
     
-    // add one more parameter of productId to send to updateQuantity
     public void add(Connection conn, String productName, int qty, double price, int employeeId, int productId) {
         String insertSaleQuery = "INSERT INTO sales (product_name, quantity_sold, price, employee_id) VALUES (?, ?, ?, ?)";
         

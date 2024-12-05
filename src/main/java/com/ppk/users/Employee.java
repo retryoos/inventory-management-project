@@ -25,15 +25,20 @@ public class Employee extends User {
         }
     }
 
+    // Getter for employeeId
     public int getEmployeeId() {
         return employeeId;
     }
 
     // Inventory Methods
-    
     // View all inventory
-    public void viewInventory(Inventory inventory) {
-        inventory.view(connection);
+    public void viewAll(Inventory inventory) {
+        inventory.viewAll(connection);
+    }
+
+    // Export all inventory
+    public void exportInventory(Inventory inventory) {
+        inventory.exportAll(connection);
     }
 
     // Search for item in inventory
@@ -41,18 +46,24 @@ public class Employee extends User {
         inventory.search(connection, productName);
     }
 
+
     // Sales Methods
+    // View all sales of employee
+    public void viewAllSales(int employeeId, Sales sales) {
+        sales.viewAllSalesEmployee(connection, employeeId);
+    }
 
     // Generate Employee Specific Report
     public void generateReport(int employeeId, Sales sales) {
         sales.generateReport(connection, employeeId);
     }
 
-    // Make sale add to table
+    // Add a sale and automatically deducts the quantity from the inventory
     public void addSale(String productName, int qty, double price, int employeeId, int productId, Sales sales) {
         sales.add(connection, productName, qty, price, employeeId, productId);
     }
 
+    // Close session for usage upon logout
     public void closeConnection() {
         if (connection != null) {
             try {

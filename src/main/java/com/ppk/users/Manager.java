@@ -33,31 +33,40 @@ public class Manager extends User {
         return id;
     }
 
+    // Inventory methods
+    // Adds product to inventory
     public void addProduct(String productName, int quantity, double price, Inventory inventory) {
         inventory.add(connection, productName, quantity, price);
     }
 
-    // make either productName or productId from table
+    // Removes product from inventory based on productId
     public void removeProduct(int productId, Inventory inventory) {
         inventory.remove(connection, productId);
     }
 
-    // Consider passing product id as well to match with product we want to update
+    // Updates product in inventory based on productId
     public void updateProduct(int productId, String productName, int qty, double price, Inventory inventory) {
         inventory.update(connection, productId, productName, qty, price);
     }
 
-    // View all stock
-    public void viewAllProducts(Inventory inventory) {
-        inventory.view(connection);
-    }
-
-    // Search specific product based on productName (maybe consider productId)
+    // Search specific product based on productName in inventory
     public void searchProduct(String productName, Inventory inventory) {
         inventory.search(connection, productName);
     }
+    
+    // View all stock in inventory
+    public void viewAll(Inventory inventory) {
+        inventory.viewAll(connection);
+    }
 
-    // Generates sales report csv for a specific employee
+    // View all stock in csv report
+    public void exportAll(Inventory inventory) {
+        inventory.exportAll(connection);
+    }
+
+
+    // Sales methods
+    // Generates sales report csv for a specific employee based on employeeId
     public void generateEmployeesSalesReport(int employeeId, Sales sales) {
         sales.generateReport(connection, employeeId);
     }
@@ -67,23 +76,33 @@ public class Manager extends User {
         sales.generateAllSalesReport(connection);
     }
 
-    // Add sale
+    // View all sales in the database
+    public void viewAllSales(Sales sales) {
+        sales.viewAllSalesManager(connection);
+    }
+
+    // Add sale and automatically deducts quantity from inventory
     public void addSale(String productName, int qty, double price, int employeeId, int productId, Sales sales) {
         sales.add(connection, productName, qty, price, employeeId, productId);
     }
 
+    // Cancel sale based on saleId
     public void cancelSale(int saleId, Sales sales) {
         sales.cancel(connection, saleId);
     }
 
+    // Employee management methods
+    // Remove employee from users table (delete)
     public void removeEmployee(int employeeId, EmployeeManage employeeManage) {
         employeeManage.remove(connection, employeeId);
     }
 
+    // Generate a csv with all employees
     public void generateAllEmployeesReport(EmployeeManage employeeManage) {
         employeeManage.viewAll(connection);
     }
 
+    // Close connection for usage upon logging out
     public void closeConnection() {
         if (connection != null) {
             try {

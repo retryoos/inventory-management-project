@@ -21,9 +21,14 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Welcome! Please choose an option:");
+        System.out.print("\033[H\033[2J");  
+        System.out.flush(); 
+        
+        System.out.println("Welcome to the Sales Inventory Magement Tracking System!");
+        System.out.println("");
         System.out.println("1. Login");
         System.out.println("2. Register");
+        System.out.print("Please choose an option: ");
 
         int choice = scanner.nextInt();
         scanner.nextLine();  // Consume the newline
@@ -109,14 +114,17 @@ public class Main {
         System.out.println("2. Remove Product");
         System.out.println("3. Update Product");
         System.out.println("4. Export Inventory Report");
-        System.out.println("5. Search for Specific Item");
-        System.out.println("6. Generate All Sales Report");
-        System.out.println("7. Generate Employee Specific Report");
-        System.out.println("8. Add Sale to Employee");
-        System.out.println("9. Cancel Sale");
-        System.out.println("10. Remove User");
-        System.out.println("11. View All Employees Report");
-        System.out.println("12. Logout");
+        System.out.println("5. View All Inventory Products");
+        System.out.println("6. Search for Specific Item");
+        System.out.println("7. Generate All Sales Report");
+        System.out.println("8. View All Sales");
+        System.out.println("9. Generate Employee Specific Report");
+        System.out.println("10. Add Sale to Employee");
+        System.out.println("11. Cancel Sale");
+        System.out.println("12. Remove User");
+        System.out.println("13. View All Employees Report");
+        System.out.println("14. Logout");
+        System.out.print("Enter your choice: ");
 
         // Initiate variables
         int productId;
@@ -235,22 +243,28 @@ public class Main {
                 manager.updateProduct(productId, productName, qty, price, new Inventory());
                 showManagerMenu(manager);
             case 4:
-                manager.viewAllProducts(new Inventory());
+                manager.exportAll(new Inventory());
                 showManagerMenu(manager);
             case 5:
+                manager.viewAll(new Inventory());
+                showManagerMenu(manager);
+            case 6:
                 System.out.print("Enter product name to search: ");
                 productName = scanner.nextLine();
                 manager.searchProduct(productName, new Inventory());
                 showManagerMenu(manager);
-            case 6:
+            case 7:
                 manager.generateAllSalesReport(new Sales());
                 showManagerMenu(manager);
-            case 7:
-                System.out.println("Enter employee ID to generate sales report: ");
+            case 8:
+                manager.viewAllSales(new Sales());
+                showManagerMenu(manager);
+            case 9:
+                System.out.print("Enter employee ID to generate sales report: ");
                 int employee_id_report = scanner.nextInt();
                 manager.generateEmployeesSalesReport(employee_id_report, new Sales());
                 showManagerMenu(manager);
-            case 8:
+            case 10:
                 System.out.print("Enter product name: ");
                 productName = scanner.nextLine();
                 
@@ -322,7 +336,7 @@ public class Main {
                 manager.addSale(productName, qty, price, employee_id_sale, productId, new Sales());
                 // Show the manager menu again after the action is done
                 showManagerMenu(manager);
-            case 9:
+            case 11:
                 System.out.print("Enter sale ID to cancel: ");
 
                 while (true) {
@@ -339,7 +353,7 @@ public class Main {
                 }
                 manager.cancelSale(saleId, new Sales());
                 showManagerMenu(manager);
-            case 10:
+            case 12:
                 System.out.print("Enter employee ID to remove: ");
 
                 while (true) {
@@ -357,13 +371,13 @@ public class Main {
 
                 manager.removeEmployee(employee_id_remove, new EmployeeManage());
                 showManagerMenu(manager);
-            case 11:
+            case 13:
                 manager.generateAllEmployeesReport(new EmployeeManage());
                 showManagerMenu(manager);
-            case 12:
+            case 14:
                 System.out.println("Logging out...");
                 manager.closeConnection();  // Close the database connection
-                break;
+                System.exit(0);
             default:
                 System.out.println("Invalid choice");
                 showManagerMenu(manager);
@@ -376,10 +390,13 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         System.out.println("\nEmployee Menu:");
         System.out.println("1. Export Inventory Report");
-        System.out.println("2. Search Specific Item");
-        System.out.println("3. Add Sale");
-        System.out.println("4. Generate Sales Report");
-        System.out.println("5. Logout");
+        System.out.println("2. View All Inventory Products");
+        System.out.println("3. Search Specific Item");
+        System.out.println("4. Add Sale");
+        System.out.println("5. View All Sales");
+        System.out.println("6. Generate Sales Report");
+        System.out.println("7. Logout");
+        System.out.print("Enter your choice: ");
 
         String productName;
         double price;
@@ -391,14 +408,17 @@ public class Main {
 
         switch (choice) {
             case 1:
-                employee.viewInventory(new Inventory());
+                employee.exportInventory(new Inventory());
                 showEmployeeMenu(employee);
             case 2:
+                employee.viewAll(new Inventory());
+                showEmployeeMenu(employee);
+            case 3:
                 System.out.print("Enter product name to search: ");
                 productName = scanner.nextLine();
                 employee.searchItem(productName, new Inventory());
                 showEmployeeMenu(employee);
-            case 3:
+            case 4:
                 System.out.print("Enter product name: ");
                 productName = scanner.nextLine();
                 
@@ -436,11 +456,11 @@ public class Main {
 
                 // Collect and validate productId input
                 while (true) {
-                    System.out.print("Enter quantity: ");
+                    System.out.print("Enter product ID: ");
                     if (scanner.hasNextInt()) {
                         productId = scanner.nextInt();
                         if (productId > 0) {
-                            break; // Valid quantity input, exit loop
+                            break; // Valid product id input, exit loop
                         } else {
                             System.out.println("Product ID must be a positive integer.");
                         }
@@ -455,13 +475,16 @@ public class Main {
                 
                 // Show the employee menu again after the action is done
                 showEmployeeMenu(employee);
-            case 4:
+            case 5:
+                employee.viewAllSales(employee.getEmployeeId(), new Sales());
+                showEmployeeMenu(employee);
+            case 6:
                 employee.generateReport(employee.getEmployeeId(), new Sales());
                 showEmployeeMenu(employee);
-            case 5:
+            case 7:
                 System.out.println("Logging out...");
                 employee.closeConnection();  // Close the database connection
-                break;
+                System.exit(0);
             default:
                 System.out.println("Invalid choice");
                 showEmployeeMenu(employee);
